@@ -1,0 +1,150 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <title>มุกไหนใช่ มุกไหนว้าว!</title>
+  <style>
+    body {
+      font-family: "Kanit", sans-serif;
+      background: linear-gradient(to bottom, #e0f7fa, #b2ebf2);
+      text-align: center;
+      padding: 30px;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 0 25px rgba(0,0,0,0.2);
+    }
+    h1 {
+      color: #00796b;
+    }
+    .question {
+      font-size: 22px;
+      margin: 20px 0;
+    }
+    button {
+      background: #009688;
+      color: white;
+      border: none;
+      padding: 10px 25px;
+      margin: 10px;
+      border-radius: 12px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #00796b;
+    }
+    .joke {
+      margin-top: 15px;
+      font-style: italic;
+      color: #555;
+    }
+    .score {
+      font-size: 20px;
+      margin-top: 20px;
+      color: #004d40;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>มุกไหนใช่ มุกไหนว้าว! 🤣</h1>
+    <div class="question" id="question">คำถามจะมาที่นี่</div>
+    <div id="answers"></div>
+    <div class="joke" id="joke"></div>
+    <div class="score" id="score"></div>
+  </div>
+
+  <!-- เสียง -->
+  <audio id="correctSound" src="https://www.soundjay.com/human/applause-8.mp3"></audio>
+  <audio id="wrongSound" src="https://www.soundjay.com/human/boo-01.mp3"></audio>
+
+  <script>
+    const questions = [
+      {
+        q: "1. แฟนบอกเลิก ควรทำยังไง?",
+        a: ["ร้องไห้ใต้ผ้าห่ม", "ไปจีบเพื่อนแฟนเลย"],
+        correct: 1,
+        joke: "แน่นอน! ถ้าใจเธอไม่อยู่กับเรา งั้นไปเอาใจเพื่อนเธอแทนละกัน! 😂"
+      },
+      {
+        q: "2. ทำไมไก่ถึงข้ามถนน?",
+        a: ["เพราะไฟเขียว", "เพราะมันอยากไปฝั่งนู้น"],
+        correct: 1,
+        joke: "ถูกต้อง! มันไม่มีเหตุผลหรอก มันเป็นมุก! 🐔"
+      },
+      {
+        q: "3. แมวพูดว่าอะไรเวลาตกใจ?",
+        a: ["เหมียววววว!", "แม่จ๋า!"],
+        correct: 0,
+        joke: "ใช่เลย! เหมียวแบบลากเสียง ตลกแต่สมจริง 🐱"
+      },
+      {
+        q: "4. เวลาเงียบ ๆ เรียกว่าอะไร?",
+        a: ["เงียบเหงา", "เงียบ...สงัด"],
+        correct: 1,
+        joke: "เงียบ...จนได้ยินเสียงความคิดเลยทีเดียว 🧠"
+      }
+    ];
+
+    let current = 0;
+    let score = 0;
+
+    const questionEl = document.getElementById("question");
+    const answersEl = document.getElementById("answers");
+    const jokeEl = document.getElementById("joke");
+    const scoreEl = document.getElementById("score");
+
+    const correctSound = document.getElementById("correctSound");
+    const wrongSound = document.getElementById("wrongSound");
+
+    function showQuestion() {
+      jokeEl.textContent = "";
+      scoreEl.textContent = "";
+      const q = questions[current];
+      questionEl.textContent = q.q;
+      answersEl.innerHTML = "";
+      q.a.forEach((ans, index) => {
+        const btn = document.createElement("button");
+        btn.textContent = ans;
+        btn.onclick = () => checkAnswer(index);
+        answersEl.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(selected) {
+      const q = questions[current];
+      if (selected === q.correct) {
+        correctSound.play();
+        score++;
+        jokeEl.textContent = q.joke;
+      } else {
+        wrongSound.play();
+        jokeEl.textContent = "ว้าาาาา... เกือบแล้ว! 🤪";
+      }
+      current++;
+      if (current < questions.length) {
+        setTimeout(showQuestion, 2000);
+      } else {
+        setTimeout(showScore, 2500);
+      }
+    }
+
+    function showScore() {
+      questionEl.textContent = "เกมจบแล้ว!";
+      answersEl.innerHTML = "";
+      jokeEl.textContent = "";
+      scoreEl.innerHTML = `คุณได้ <strong>${score} / ${questions.length}</strong> คะแนน! 🎉`;
+    }
+
+    // เริ่มเกม
+    showQuestion();
+  </script>
+</body>
+</html>
